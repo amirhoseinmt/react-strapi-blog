@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# logs
+*.log
+
+.vite/
+
+# env files
+.env
+.env.local
+
+# frontend
+frontend/dist
+frontend/node_modules
+
+# backend
+backend/node_modules
+backend/build
+backend/.cache
+backend/.tmp
+
+# sqlite
+*.db
+*.sqlite
