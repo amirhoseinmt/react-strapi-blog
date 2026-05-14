@@ -21,8 +21,10 @@ A modern blog application built with React, TypeScript, Vite, and Strapi CMS.
 
 ## Project Structure
 
-frontend/ → React frontend
-backend/ → Strapi backend
+```txt
+frontend → React
+backend → Strapi
+```
 
 Getting Started:
 
