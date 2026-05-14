@@ -23,8 +23,6 @@ const HomePage = () => {
     fetchPosts();
   }, []);
 
-  const editorPicks = posts.filter((post) => post.featured).slice(0, 3);
-
   // Latest posts published
   const latestPosts = posts.slice(0, 8);
 
@@ -39,11 +37,9 @@ const HomePage = () => {
   return (
     <div className="space-y-16">
       {/* Hero Slider */}
-      {editorPicks.length > 0 && (
-        <section>
-          <HeroSlider posts={editorPicks} />
-        </section>
-      )}
+      <section>
+        <HeroSlider maxSlides={3} />
+      </section>
 
       {/* Latest Posts */}
       <section className="space-y-6">
