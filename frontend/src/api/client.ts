@@ -1,7 +1,10 @@
 import axios from "axios";
 
-const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_STRAPI_URL || "http://localhost:1337",
+export const API_BASE_URL =
+  import.meta.env.VITE_STRAPI_URL || "http://localhost:1337";
+
+const client = axios.create({
+  baseURL: API_BASE_URL,
 });
 
-export default apiClient;
+export default client;

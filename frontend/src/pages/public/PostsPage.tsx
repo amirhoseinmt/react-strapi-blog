@@ -5,6 +5,7 @@ import type { Post } from "../../types/post";
 
 type SortOrder = "newest" | "oldest";
 
+// ??
 type CategoryFilter = NonNullable<Post["category"]>;
 
 const PostsPage = () => {
@@ -16,6 +17,7 @@ const PostsPage = () => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [page, setPage] = useState(1);
 
+  // fetching all posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -34,6 +36,7 @@ const PostsPage = () => {
     fetchPosts();
   }, []);
 
+  // category extraction ??
   const categories = useMemo(() => {
     const uniqueCategories = new Map<number, CategoryFilter>();
 
@@ -46,8 +49,10 @@ const PostsPage = () => {
     );
   }, [posts]);
 
+  // for normalize serach input texts (React, REACT, react)
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
+  // filtering the posts
   const filteredPosts = useMemo(() => {
     const selectedCategorySet = new Set(selectedCategoryIds);
 

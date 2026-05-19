@@ -77,7 +77,7 @@ const PostDetailPage = () => {
   }
 
   return (
-    <section className="px-6 py-10">
+    <section>
       <article className="mx-auto max-w-4xl">
         {post.coverImage && (
           <img

@@ -6,29 +6,18 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import client from "../api/client";
-import { mapPost } from "../lib/strapiMappers";
+import { getLatestPosts } from "../api/posts";
 import type { Post } from "../types/post";
 
 type HeroSliderProps = {
   maxSlides: number;
 };
 
-type PostsResponse = {
-  data?: unknown[];
-};
-
-const fetchLatestPosts = async (limit: number, signal: AbortSignal) => {
-  const res = await client.get<PostsResponse>("/api/posts", {
-    params: {
-      populate: "*",
-      "sort[0]": "publishedAt:desc",
-      "pagination[pageSize]": limit,
-    },
-    signal,
-  });
-
-  return (res.data?.data ?? []).map(mapPost);
+const isRequestCanceled = (err: unknown) => {
+  return (
+    (err as AxiosError).code === "ERR_CANCELED" ||
+    (err instanceof DOMException && err.name === "AbortError")
+  );
 };
 
 const HeroSlider = ({ maxSlides }: HeroSliderProps) => {
@@ -49,14 +38,13 @@ const HeroSlider = ({ maxSlides }: HeroSliderProps) => {
         setIsLoading(true);
         setError(null);
 
-        const latestPosts = await fetchLatestPosts(
-          safeMaxSlides,
-          controller.signal,
-        );
+        const latestPosts = await getLatestPosts(safeMaxSlides, {
+          signal: controller.signal,
+        });
 
         setPosts(latestPosts);
       } catch (err) {
-        if ((err as AxiosError).code === "ERR_CANCELED") return;
+        if (isRequestCanceled(err)) return;
         console.error("Error fetching hero slider posts:", err);
         setError("امکان دریافت اسلایدها وجود ندارد.");
         setPosts([]);
@@ -100,14 +88,21 @@ const HeroSlider = ({ maxSlides }: HeroSliderProps) => {
         pagination={posts.length > 1 ? { clickable: true } : false}
         autoplay={
           posts.length > 1
-            ? { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }
+            ? {
+                delay: 5000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }
             : false
         }
         className="hero-slider h-105 w-full"
       >
         {posts.map((post) => (
           <SwiperSlide key={post.id}>
-            <Link to={`/posts/${post.slug}`} className="group relative block h-full">
+            <Link
+              to={`/posts/${post.slug}`}
+              className="group relative block h-full"
+            >
               {post.coverImage ? (
                 <img
                   src={post.coverImage}
